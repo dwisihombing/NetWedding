@@ -38,7 +38,8 @@ export default function Navigation({
         <motion.h1
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="text-2xl md:text-3xl font-black text-netflix-red"
+          onClick={() => setActiveSection('home')}
+          className="text-2xl md:text-3xl font-black text-netflix-red cursor-pointer hover:opacity-80 transition-opacity"
         >
           IvanJulia
         </motion.h1>

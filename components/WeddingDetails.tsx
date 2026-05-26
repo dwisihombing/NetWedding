@@ -34,8 +34,11 @@ export default function WeddingDetails() {
   ]
 
   return (
-    <section className="min-h-screen bg-netflix-black py-20 md:py-32">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
+    <section className="min-h-screen relative py-20 md:py-32">
+      {/* Background image */}
+      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/image/2-SLIDE--scaled.jpg')" }}></div>
+      <div className="absolute inset-0 bg-netflix-black/80 backdrop-blur-sm"></div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}

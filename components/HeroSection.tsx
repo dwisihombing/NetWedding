@@ -79,10 +79,11 @@ export default function HeroSection({ setActiveSection }: HeroSectionProps) {
                 <div className="absolute inset-0 bg-cover bg-center opacity-50 group-hover:opacity-70 transition-opacity" style={{ backgroundImage: "url('/image/5.-BRIDE-750x1024.jpg')" }}></div>
                 <span className="relative z-10 font-bold text-xl">{t('details_reception')}</span>
              </div>
-             <div onClick={() => setActiveSection('rsvp')} className="snap-start min-w-[200px] md:min-w-[300px] h-32 md:h-40 bg-netflix-red/20 rounded flex items-center justify-center cursor-pointer hover:bg-netflix-red/40 border-2 border-netflix-red/50 hover:border-white transition-all group">
-                <div className="text-center">
-                  <svg className="w-10 h-10 mx-auto text-white mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" /></svg>
-                  <span className="font-bold text-lg">{t('rsvp_title')}</span>
+             <div onClick={() => setActiveSection('rsvp')} className="snap-start min-w-[200px] md:min-w-[300px] h-32 md:h-40 bg-gray-800 rounded flex items-center justify-center cursor-pointer hover:border-white border-2 border-transparent transition-all overflow-hidden relative group">
+                <div className="absolute inset-0 bg-cover bg-center opacity-50 group-hover:opacity-70 transition-opacity" style={{ backgroundImage: "url('/image/7-LOVE-TOKEN-scaled.jpg')" }}></div>
+                <div className="relative z-10 text-center">
+                  <svg className="w-8 h-8 mx-auto text-white mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" /></svg>
+                  <span className="font-bold text-xl drop-shadow-md">{t('rsvp_title')}</span>
                 </div>
              </div>
           </div>
