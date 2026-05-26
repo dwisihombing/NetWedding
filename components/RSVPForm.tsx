@@ -2,19 +2,18 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface RSVPFormProps {
   guestSlug: string
 }
 
 export default function RSVPForm({ guestSlug }: RSVPFormProps) {
+  const { t } = useLanguage()
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
-    attendance: 'undecided' as 'confirmed' | 'declined' | 'undecided',
+    attendance: 'undecided' as 'matrimony' | 'reception' | 'both' | 'no' | 'undecided',
     groupSize: 1,
-    dietaryRestrictions: '',
-    message: '',
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -38,30 +37,44 @@ export default function RSVPForm({ guestSlug }: RSVPFormProps) {
     setIsSubmitting(true)
 
     try {
-      // Simulate API call to Supabase
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const response = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          guestSlug,
+          name: formData.name,
+          attendance: formData.attendance,
+          groupSize: formData.groupSize,
+        }),
+      })
 
-      setSubmitMessage('Thank you! Your RSVP has been received.')
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => ({}))
+        throw new Error(errorBody.error || t('rsvp_error'))
+      }
+
+      setSubmitMessage(t('rsvp_success'))
       setFormData({
         name: '',
-        email: '',
         attendance: 'undecided',
         groupSize: 1,
-        dietaryRestrictions: '',
-        message: '',
       })
 
       setTimeout(() => setSubmitMessage(''), 3000)
     } catch (error) {
-      setSubmitMessage('Something went wrong. Please try again.')
+      setSubmitMessage(t('rsvp_error'))
       setTimeout(() => setSubmitMessage(''), 3000)
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  const isAttending = formData.attendance === 'matrimony' || formData.attendance === 'reception' || formData.attendance === 'both'
+
   return (
-    <section className="min-h-screen bg-netflix-black py-20 md:py-32">
+    <section className="min-h-screen bg-netflix-black py-20 md:py-32 overflow-y-auto">
       <div className="max-w-2xl mx-auto px-4 md:px-8">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
@@ -69,7 +82,7 @@ export default function RSVPForm({ guestSlug }: RSVPFormProps) {
           transition={{ duration: 0.6 }}
           className="text-4xl md:text-6xl font-black text-white mb-4 text-center"
         >
-          RSVP
+          {t('rsvp_title')}
         </motion.h2>
 
         <motion.p
@@ -78,7 +91,7 @@ export default function RSVPForm({ guestSlug }: RSVPFormProps) {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="text-center text-gray-400 mb-12"
         >
-          Please let us know if you can join us
+          {t('rsvp_subtitle')}
         </motion.p>
 
         <motion.form
@@ -86,12 +99,12 @@ export default function RSVPForm({ guestSlug }: RSVPFormProps) {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
           onSubmit={handleSubmit}
-          className="space-y-6"
+          className="space-y-6 bg-gray-900/50 p-8 rounded-xl border border-gray-800"
         >
           {/* Name */}
           <div>
             <label className="block text-sm font-semibold text-gray-300 mb-2">
-              Name
+              {t('rsvp_name')}
             </label>
             <input
               type="text"
@@ -100,30 +113,14 @@ export default function RSVPForm({ guestSlug }: RSVPFormProps) {
               onChange={handleChange}
               required
               className="w-full px-4 py-3 bg-gray-800 text-white rounded border border-gray-700 focus:border-netflix-red focus:outline-none transition-colors"
-              placeholder="Your name"
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 bg-gray-800 text-white rounded border border-gray-700 focus:border-netflix-red focus:outline-none transition-colors"
-              placeholder="your.email@example.com"
+              placeholder={t('rsvp_name_placeholder')}
             />
           </div>
 
           {/* Attendance */}
           <div>
             <label className="block text-sm font-semibold text-gray-300 mb-2">
-              Will you attend?
+              {t('rsvp_attend_label')}
             </label>
             <select
               name="attendance"
@@ -131,27 +128,29 @@ export default function RSVPForm({ guestSlug }: RSVPFormProps) {
               onChange={handleChange}
               className="w-full px-4 py-3 bg-gray-800 text-white rounded border border-gray-700 focus:border-netflix-red focus:outline-none transition-colors"
             >
-              <option value="undecided">Not sure yet</option>
-              <option value="confirmed">Yes, I'll be there!</option>
-              <option value="declined">Sorry, can't make it</option>
+              <option value="undecided">{t('rsvp_attend_undecided')}</option>
+              <option value="matrimony">{t('rsvp_attend_matrimony')}</option>
+              <option value="reception">{t('rsvp_attend_reception')}</option>
+              <option value="both">{t('rsvp_attend_both')}</option>
+              <option value="no">{t('rsvp_attend_no')}</option>
             </select>
           </div>
 
           {/* Group Size */}
-          {formData.attendance === 'confirmed' && (
+          {isAttending && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
             >
               <label className="block text-sm font-semibold text-gray-300 mb-2">
-                How many guests?
+                {t('rsvp_guests_label')}
               </label>
               <input
                 type="number"
                 name="groupSize"
                 min="1"
-                max="5"
+                max="10"
                 value={formData.groupSize}
                 onChange={handleChange}
                 className="w-full px-4 py-3 bg-gray-800 text-white rounded border border-gray-700 focus:border-netflix-red focus:outline-none transition-colors"
@@ -159,45 +158,15 @@ export default function RSVPForm({ guestSlug }: RSVPFormProps) {
             </motion.div>
           )}
 
-          {/* Dietary Restrictions */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">
-              Dietary Restrictions (optional)
-            </label>
-            <input
-              type="text"
-              name="dietaryRestrictions"
-              value={formData.dietaryRestrictions}
-              onChange={handleChange}
-              className="w-full px-4 py-3 bg-gray-800 text-white rounded border border-gray-700 focus:border-netflix-red focus:outline-none transition-colors"
-              placeholder="e.g., vegetarian, gluten-free"
-            />
-          </div>
-
-          {/* Message */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">
-              Message for the couple (optional)
-            </label>
-            <textarea
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              rows={4}
-              className="w-full px-4 py-3 bg-gray-800 text-white rounded border border-gray-700 focus:border-netflix-red focus:outline-none transition-colors resize-none"
-              placeholder="Share your wishes and congratulations..."
-            />
-          </div>
-
           {/* Submit Button */}
           <motion.button
             type="submit"
-            disabled={isSubmitting}
-            whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-            whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-            className="w-full py-3 bg-netflix-red hover:bg-red-700 disabled:bg-gray-600 text-white font-bold rounded transition-colors"
+            disabled={isSubmitting || formData.attendance === 'undecided'}
+            whileHover={{ scale: (isSubmitting || formData.attendance === 'undecided') ? 1 : 1.02 }}
+            whileTap={{ scale: (isSubmitting || formData.attendance === 'undecided') ? 1 : 0.98 }}
+            className="w-full py-3 bg-netflix-red hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold rounded transition-colors mt-8"
           >
-            {isSubmitting ? 'Submitting...' : 'Submit RSVP'}
+            {isSubmitting ? t('rsvp_submitting') : t('rsvp_submit')}
           </motion.button>
 
           {/* Message */}
@@ -206,7 +175,7 @@ export default function RSVPForm({ guestSlug }: RSVPFormProps) {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               className={`p-4 rounded text-center ${
-                submitMessage.includes('Thank')
+                submitMessage === t('rsvp_success')
                   ? 'bg-green-900 text-green-100'
                   : 'bg-red-900 text-red-100'
               }`}

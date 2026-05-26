@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 
 interface WhoIsWatchingProps {
-  onSelect: () => void
+  onSelect: (profileName: string) => void
   guestCode: string
 }
 
@@ -23,7 +23,7 @@ export default function WhoIsWatching({ onSelect }: WhoIsWatchingProps) {
         animate={{ opacity: 1, y: 0 }}
         className="text-5xl md:text-6xl font-bold text-white mb-16"
       >
-        Who's Watching?
+        Who's Invited?
       </motion.h1>
 
       <div className="flex gap-8 md:gap-12 flex-wrap justify-center mb-16">
@@ -35,7 +35,7 @@ export default function WhoIsWatching({ onSelect }: WhoIsWatchingProps) {
             transition={{ delay: index * 0.2 }}
             onClick={() => {
               setSelected(true)
-              setTimeout(() => onSelect(), 500)
+              setTimeout(() => onSelect(profile.name), 500)
             }}
             className={`cursor-pointer group transition-transform duration-300 ${
               selected ? 'pointer-events-none' : 'hover:scale-110'

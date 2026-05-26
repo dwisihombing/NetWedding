@@ -3,27 +3,32 @@
 import { motion } from 'framer-motion'
 
 export default function WeddingDetails() {
-  const ceremonyTime = process.env.NEXT_PUBLIC_CEREMONY_TIME || '14:00'
-  const receptionTime = process.env.NEXT_PUBLIC_RECEPTION_TIME || '18:00'
-  const location = process.env.NEXT_PUBLIC_WEDDING_LOCATION || 'Grand Hotel Ballroom'
+  const ceremonyTime =
+    process.env.NEXT_PUBLIC_CEREMONY_TIME || 'Friday, 17 July 2026 - 09.00 WIB'
+  const receptionTime =
+    process.env.NEXT_PUBLIC_RECEPTION_TIME || 'Friday, 17 July 2026 - 12.00 WIB'
+  const ceremonyLocation =
+    process.env.NEXT_PUBLIC_CEREMONY_LOCATION || 'GBKP Runggun Sidikalang, Dairi'
+  const receptionLocation =
+    process.env.NEXT_PUBLIC_RECEPTION_LOCATION || 'Sopo Godang HKBP 1 Sidikalang, Dairi'
 
   const details = [
     {
-      title: 'Ceremony',
+      title: 'Holy Matrimony',
       time: ceremonyTime,
-      description: 'Join us for the exchange of vows',
+      description: ceremonyLocation,
       icon: '💍',
     },
     {
-      title: 'Reception',
+      title: 'Wedding Reception',
       time: receptionTime,
-      description: 'Celebration, dinner, and dancing',
+      description: receptionLocation,
       icon: '🎉',
     },
     {
-      title: 'Location',
-      time: location,
-      description: 'Grand venue for our special day',
+      title: 'Couple',
+      time: 'IVAN & JULIA',
+      description: 'Ivan Daniel Andrianta Sitepu S.Si & Julia Ester Stepany Nababan S.K.M',
       icon: '📍',
     },
   ]
@@ -64,23 +69,19 @@ export default function WeddingDetails() {
           transition={{ delay: 0.6, duration: 0.6 }}
           className="mt-16 bg-gray-900 rounded-lg p-8 border border-gray-800"
         >
-          <h3 className="text-2xl font-bold text-white mb-4">What to Expect</h3>
+          <h3 className="text-2xl font-bold text-white mb-4">Wedding Gift</h3>
           <ul className="space-y-3 text-gray-300">
             <li className="flex items-start gap-3">
               <span className="text-netflix-red">▸</span>
-              <span>Elegant ceremony followed by cocktail hour</span>
+              <span>For those who want to give gift:</span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-netflix-red">▸</span>
-              <span>Gourmet dinner with carefully curated menu</span>
+              <span>Mandiri a/n Ivan Daniel Andrianta - 1050020312512</span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-netflix-red">▸</span>
-              <span>Live entertainment and dancing until late</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="text-netflix-red">▸</span>
-              <span>Photo opportunities throughout the evening</span>
+              <span>BNI a/n Julia Ester Stepany - 0838461459</span>
             </li>
           </ul>
         </motion.div>

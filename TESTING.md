@@ -26,25 +26,19 @@ module.exports = createJestConfig(customJestConfig)
 
 ## 🔍 Manual Testing Checklist
 
-### 1. Guest Code Entry
-- [ ] Enter valid code (e.g., "ABC123")
-- [ ] Enter invalid code (too short)
-- [ ] Code is stored in localStorage
-- [ ] Can navigate to Who's Watching page
-
-### 2. Who's Watching Page
+### 1. Profile Selection (Who's Invited?)
 - [ ] Both profiles display correctly
 - [ ] Hover effects work
 - [ ] Click animation works
-- [ ] Redirects to invitation page
+- [ ] Redirects to opening cinematic
 
-### 3. Opening Cinematic
+### 2. Opening Cinematic
 - [ ] Progress bar animates
 - [ ] Couple names display
 - [ ] Automatic progression to next section
 - [ ] Can skip (optional feature)
 
-### 4. Hero Section
+### 3. Hero Section
 - [ ] Couple names display correctly
 - [ ] Countdown shows correct days
 - [ ] Date formatted correctly
@@ -198,15 +192,14 @@ npm install --save-dev @next/bundle-analyzer
 ## 🎬 User Journey Testing
 
 ### Complete Happy Path
-1. [ ] Start at `/login`
-2. [ ] Enter guest code
-3. [ ] Select profile
-4. [ ] Watch cinematic
-5. [ ] Scroll through hero
-6. [ ] View wedding details
-7. [ ] Browse gallery
-8. [ ] Fill RSVP form
-9. [ ] See confirmation
+1. [ ] Start at `/` (home)
+2. [ ] Select profile from "Who's Invited?"
+3. [ ] Watch cinematic
+4. [ ] Scroll through hero
+5. [ ] View wedding details
+6. [ ] Browse gallery
+7. [ ] Fill RSVP form
+8. [ ] See confirmation
 
 ### Edge Cases
 - [ ] Invalid email format
@@ -252,8 +245,8 @@ npm install --save-dev @next/bundle-analyzer
 - **Skipped:** 0
 
 ## Passed Tests
-✅ Guest code entry
-✅ Who's Watching navigation
+✅ Profile selection (Who's Invited?)
+✅ Navigation
 ... (list all passed)
 
 ## Failed Tests

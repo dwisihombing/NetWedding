@@ -4,14 +4,14 @@ Welcome to **NetWedding**, a Netflix-inspired digital wedding invitation platfor
 
 ## Overview
 
-NetWedding adalah undangan pernikahan digital berbasis web yang meniru tampilan dan nuansa Netflix. Pengunjung masuk melalui halaman "Who's Watching" yang dipersonalisasi, menyaksikan opening cinematic bertema nama pasangan, lalu menjelajahi informasi pernikahan yang disajikan dalam format konten ala Netflix.
+NetWedding adalah undangan pernikahan digital berbasis web yang meniru tampilan dan nuansa Netflix. Pengunjung langsung masuk ke halaman profile "Who's Invited?" yang dipersonalisasi, menyaksikan opening cinematic bertema nama pasangan, lalu menjelajahi informasi pernikahan yang disajikan dalam format konten ala Netflix.
 
 ## Features
 
 ✨ **Key Features:**
 - 🎬 **Netflix-Style Interface** - Familiar design language with dark theme and red accents
 - 🔐 **Personalized Access** - Each guest gets a unique link with a 6-digit code
-- 🎭 **Who's Watching Page** - Netflix-like profile selection interface
+- 🎭 **Who's Invited? Page** - Netflix-like profile selection interface
 - 🎞️ **Opening Cinematic** - Dramatic animated introduction with couple's names
 - 📋 **Wedding Information** - Ceremony time, reception details, and what to expect
 - 🖼️ **Gallery Section** - Space for wedding photos and memories
@@ -23,7 +23,8 @@ NetWedding adalah undangan pernikahan digital berbasis web yang meniru tampilan 
 - **Frontend**: Next.js 14, React 18, TypeScript
 - **Styling**: Tailwind CSS with custom Netflix-inspired theme
 - **Animations**: Framer Motion
-- **Backend**: Supabase (PostgreSQL)
+- **Backend**: Supabase (PostgreSQL + Storage)
+- **Guest Master Data**: Google Sheets (nama undangan, nomor telepon, jenis kelamin)
 - **Deployment Ready**: Vercel-compatible
 
 ## Getting Started
@@ -46,6 +47,9 @@ NetWedding adalah undangan pernikahan digital berbasis web yang meniru tampilan 
      ```bash
      NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
      NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+    SUPABASE_GALLERY_BUCKET=gallery
+    SUPABASE_GALLERY_FOLDER=
+    GOOGLE_SHEETS_CSV_URL=https://docs.google.com/spreadsheets/d/<sheet-id>/gviz/tq?tqx=out:csv
      ```
    - Configure wedding details:
      ```bash
@@ -63,6 +67,25 @@ NetWedding adalah undangan pernikahan digital berbasis web yang meniru tampilan 
    ```
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## MVP Architecture (Agreed)
+
+- **Deploy**: Vercel
+- **Repository**: GitHub
+- **Guest List Source**: Google Sheets (easy admin update)
+- **Photo Gallery**: Supabase Storage (gratis, cepat, mudah upload)
+- **Wishes/Ucapan**: Supabase DB (real-time, production-ready)
+- **MVP Scope**: Lokasi, RSVP, Gift, Wishes, Galeri
+
+### Google Sheets format (header wajib)
+
+Gunakan header CSV berikut di row pertama:
+
+`unique_slug,name,phone,gender`
+
+Contoh:
+
+`guest001,Budi,08123456789,male`
+
 ## Database Setup
 
 ### Create Tables in Supabase
@@ -75,8 +98,8 @@ CREATE TABLE guests (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   unique_slug VARCHAR(10) UNIQUE NOT NULL,
   name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  phone VARCHAR(20),
+  phone VARCHAR(20) NOT NULL,
+  gender VARCHAR(20),
   rsvp_status VARCHAR(20) DEFAULT 'pending',
   group_size INT DEFAULT 1,
   dietary_restrictions TEXT,
@@ -87,9 +110,10 @@ CREATE TABLE guests (
 -- RSVP Responses table
 CREATE TABLE rsvp_responses (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  guest_slug VARCHAR(10) NOT NULL REFERENCES guests(unique_slug),
+  guest_slug VARCHAR(10) NOT NULL,
   name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  gender VARCHAR(20),
   attendance VARCHAR(20),
   group_size INT,
   dietary_restrictions TEXT,
@@ -97,6 +121,8 @@ CREATE TABLE rsvp_responses (
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE INDEX idx_rsvp_guest_slug ON rsvp_responses(guest_slug);
 
 -- Wedding Info table
 CREATE TABLE wedding_info (
@@ -123,7 +149,6 @@ NetWedding/
 │   ├── api/                 # API routes
 │   │   ├── rsvp/           # RSVP endpoint
 │   │   └── guest/          # Guest lookup endpoint
-│   ├── login/              # Login/Who's Watching page
 │   ├── invite/[slug]/      # Main invitation page
 │   ├── layout.tsx          # Root layout
 │   ├── page.tsx            # Home redirect
@@ -153,11 +178,10 @@ NetWedding/
 
 ### Guest Access Flow
 
-1. **Entry Point**: Guest receives unique link with 6-digit code
-2. **Login**: Guest enters their code on `/login` page
-3. **Profile Selection**: Netflix-style "Who's Watching?" page
-4. **Opening Show**: Dramatic cinematic with couple's names
-5. **Invitation Hub**: Browse wedding details, gallery, and RSVP
+1. **Entry Point**: Guest opens the invitation link
+2. **Profile Selection**: Netflix-style "Who's Invited?" page
+3. **Opening Show**: Dramatic cinematic with couple's names
+4. **Invitation Hub**: Browse wedding details, gallery, and RSVP
 
 ## Customization
 
@@ -191,6 +215,63 @@ Fetch guest information
 
 ### GET /api/rsvp?slug=ABC123
 Fetch RSVP response for guest
+
+## Langkah 2 — Setup Supabase Gallery (Storage)
+
+1. Buka **Supabase Dashboard → Storage**
+2. Buat bucket baru:
+   - Name: `gallery` (atau sesuaikan dengan `SUPABASE_GALLERY_BUCKET`)
+   - Access: **Public**
+3. (Opsional) Buat folder, misalnya: `wedding`
+4. Upload foto-foto ke bucket/folder tersebut
+5. Set environment di `.env.local`:
+
+```env
+SUPABASE_GALLERY_BUCKET=gallery
+SUPABASE_GALLERY_FOLDER=wedding
+```
+
+6. Jalankan app, lalu test endpoint:
+   - `GET /api/gallery`
+   - Harus mengembalikan `images: [{ id, title, imageUrl }]`
+
+### Jika bucket private
+Pastikan policy read diaktifkan untuk file yang ingin ditampilkan publik, atau ubah bucket menjadi public.
+
+## Langkah 3 — Test RSVP + Wishes real ke Supabase
+
+### A. Test dari UI
+1. Buka undangan: `/invite/<slug-tamu>`
+2. Masuk ke tab **RSVP**
+3. Isi form: nama, nomor telepon, jenis kelamin, attendance, message
+4. Submit
+5. Cek di Supabase table `rsvp_responses` apakah row baru masuk
+
+### B. Test cepat via API (opsional)
+
+Gunakan request berikut:
+
+```bash
+curl -X POST http://localhost:3000/api/rsvp \
+  -H "Content-Type: application/json" \
+  -d '{
+    "guestSlug":"guest001",
+    "name":"Budi",
+    "phone":"08123456789",
+    "gender":"male",
+    "attendance":"confirmed",
+    "groupSize":2,
+    "dietaryRestrictions":"",
+    "message":"Selamat ya!"
+  }'
+```
+
+Respons sukses:
+- `{ "success": true, ... }`
+
+### C. Verifikasi hasil submit
+- Cek row baru di `rsvp_responses`
+- Kolom penting yang wajib terisi: `guest_slug`, `name`, `phone`, `message`
 
 ## License
 

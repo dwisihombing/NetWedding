@@ -7,23 +7,24 @@ export async function POST(request: NextRequest) {
     const {
       guestSlug,
       name,
-      email,
       attendance,
       groupSize,
-      dietaryRestrictions,
-      message,
     } = body
+
+    if (!guestSlug || !name) {
+      return NextResponse.json(
+        { error: 'guestSlug and name are required' },
+        { status: 400 }
+      )
+    }
 
     // Insert RSVP into Supabase
     const { data, error } = await supabase.from('rsvp_responses').insert([
       {
         guest_slug: guestSlug,
         name,
-        email,
         attendance,
-        group_size: groupSize,
-        dietary_restrictions: dietaryRestrictions,
-        message,
+        group_size: attendance === 'no' ? 0 : groupSize,
       },
     ])
 
@@ -33,6 +34,16 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Also update guest status
+    let rsvpStatus = 'pending'
+    if (attendance === 'no') rsvpStatus = 'declined'
+    else if (attendance !== 'undecided') rsvpStatus = 'confirmed'
+    
+    await supabase
+      .from('guests')
+      .update({ rsvp_status: rsvpStatus, group_size: attendance === 'no' ? 0 : groupSize })
+      .eq('unique_slug', guestSlug)
 
     return NextResponse.json(
       { success: true, data },

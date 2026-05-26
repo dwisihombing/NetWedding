@@ -4,7 +4,7 @@
 
 ### ✅ Implemented
 - [x] Netflix-style dark UI with responsive design
-- [x] Who's Watching profile selection page
+- [x] Who's Invited? profile selection page
 - [x] Opening cinematic with couple names
 - [x] Main invitation hub with tabbed navigation
 - [x] Wedding details section (ceremony time, reception, location)

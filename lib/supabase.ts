@@ -19,8 +19,8 @@ export interface Guest {
   id: string
   unique_slug: string
   name: string
-  email: string
-  phone?: string
+  phone: string
+  gender?: string
   rsvp_status: 'pending' | 'confirmed' | 'declined'
   group_size: number
   dietary_restrictions?: string

@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS guests (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   unique_slug VARCHAR(10) UNIQUE NOT NULL,
   name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  phone VARCHAR(20),
+  phone VARCHAR(20) NOT NULL,
+  gender VARCHAR(20),
   rsvp_status VARCHAR(20) DEFAULT 'pending',
   group_size INT DEFAULT 1,
   dietary_restrictions TEXT,
@@ -39,9 +39,10 @@ CREATE TABLE IF NOT EXISTS guests (
 -- RSVP Responses table
 CREATE TABLE IF NOT EXISTS rsvp_responses (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  guest_slug VARCHAR(10) NOT NULL REFERENCES guests(unique_slug),
+  guest_slug VARCHAR(10) NOT NULL,
   name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  gender VARCHAR(20),
   attendance VARCHAR(20),
   group_size INT,
   dietary_restrictions TEXT,
@@ -49,6 +50,8 @@ CREATE TABLE IF NOT EXISTS rsvp_responses (
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE INDEX IF NOT EXISTS idx_rsvp_guest_slug ON rsvp_responses(guest_slug);
 
 -- Wedding Info table
 CREATE TABLE IF NOT EXISTS wedding_info (

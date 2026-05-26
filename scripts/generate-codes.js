@@ -30,7 +30,7 @@ const generateCodes = (count = 20) => {
 const formatCodesForCSV = (codes) => {
   return codes
     .map(
-      (code, index) => `${index + 1},${code},https://yourdomain.com/login?code=${code}`
+      (code, index) => `${index + 1},${code},https://yourdomain.com/invite/${code}`
     )
     .join('\n')
 }

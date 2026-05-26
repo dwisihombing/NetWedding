@@ -8,33 +8,34 @@ import WeddingDetails from './WeddingDetails'
 import GallerySection from './GallerySection'
 import RSVPForm from './RSVPForm'
 
+type SectionType = 'home' | 'details' | 'gallery' | 'rsvp'
+
 interface InvitationHubProps {
   guestSlug: string
 }
-
-type SectionType = 'home' | 'details' | 'gallery' | 'rsvp'
 
 export default function InvitationHub({ guestSlug }: InvitationHubProps) {
   const [activeSection, setActiveSection] = useState<SectionType>('home')
 
   const sections = {
-    home: <HeroSection />,
+    home: <HeroSection setActiveSection={setActiveSection} />,
     details: <WeddingDetails />,
     gallery: <GallerySection />,
     rsvp: <RSVPForm guestSlug={guestSlug} />,
   }
 
   return (
-    <div className="min-h-screen bg-netflix-black">
+    <div className="min-h-screen bg-netflix-black flex flex-col">
       <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
 
-      <main className="pt-20 md:pt-24">
+      <main className="flex-1 w-full overflow-hidden">
         <motion.div
           key={activeSection}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
+          className="min-h-screen"
         >
           {sections[activeSection]}
         </motion.div>

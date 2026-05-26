@@ -13,8 +13,7 @@
 │
 │  Browser (Next.js App)
 │  ├─ Pages (Next.js App Router)
-│  │  ├─ /login → LoginPage (Guest Code + Who's Watching)
-│  │  ├─ / → Redirect to /login
+│  │  ├─ / → Redirect to /invite/guest
 │  │  └─ /invite/[slug] → InvitePage (Main Invitation)
 │  │
 │  ├─ Components (React + Framer Motion)
@@ -110,11 +109,9 @@
 ```
 Guest receives link
     ↓
-Click link → /login?code=ABC123
+Click link → /invite/[slug]
     ↓
-Enter/confirm code
-    ↓
-Select profile (Who's Watching)
+Select profile (Who's Invited?)
     ↓
 POST /api/guest?slug=ABC123
     ↓
@@ -143,19 +140,14 @@ Show confirmation
 <Layout>
   <Providers>
     <page>
-      {activeSection === 'code' ? (
-        <LoginPage>
-          <form onSubmit={handleCodeSubmit} />
-        </LoginPage>
-      ) : (
-        <WhoIsWatching onSelect={handleWatchingSelect} />
-      )}
+      {/* Home redirects to /invite/guest */}
+      Redirect to /invite/guest
     </page>
     
-    OR
-    
     <InvitePage>
-      {!hasWatched ? (
+      {stage === 'profile' ? (
+        <WhoIsWatching onSelect={handleProfileSelect} />
+      ) : stage === 'cinema' ? (
         <OpeningCinematic onComplete={handleCinematicComplete} />
       ) : (
         <InvitationHub>
@@ -177,8 +169,7 @@ Show confirmation
 
 ### Component State
 - Navigation: `activeSection`
-- LoginPage: `guestCode`, `stage`, `isLoading`, `error`
-- InvitePage: `hasWatched`
+- InvitePage: `stage`, `selectedProfile`
 - RSVPForm: `formData`, `isSubmitting`, `submitMessage`
 - WhoIsWatching: `selected`
 

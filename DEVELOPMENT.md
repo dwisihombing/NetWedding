@@ -31,10 +31,9 @@
 
 ### `/app` - Next.js App Router
 - **layout.tsx** - Root layout for entire app
-- **page.tsx** - Home page (redirects to login)
+- **page.tsx** - Home page (redirects to /invite/guest)
 - **providers.tsx** - React context providers
-- **login/** - Guest code entry & Who's Watching
-- **invite/[slug]/** - Main invitation page
+- **invite/[slug]/** - Main invitation page with profile selection & cinematic
 - **api/** - Backend endpoints
 
 ### `/components` - React Components
@@ -209,11 +208,10 @@ export async function POST(request: NextRequest) {
 ## Testing Locally
 
 ### Test Guest Flow
-1. Go to `http://localhost:3000/login`
-2. Enter any 6-digit code (e.g., ABC123)
-3. Select a profile
-4. View invitation pages
-5. Test RSVP form
+1. Go to `http://localhost:3000`
+2. Select a profile from "Who's Invited?"
+3. View invitation pages
+4. Test RSVP form
 
 ### Test API Endpoints
 ```bash

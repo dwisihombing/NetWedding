@@ -81,10 +81,10 @@ const generateGuestCode = () => {
 
 **Send guests links like:**
 ```
-https://yourdomain.com/login?code=ABC123
+https://yourdomain.com/invite/guest123
 ```
 
-Or create QR codes pointing to guest links for print invitations.
+Or create QR codes pointing to personalized guest links for print invitations.
 
 ### 9. Monitoring & Maintenance
 

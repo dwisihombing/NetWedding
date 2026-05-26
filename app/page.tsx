@@ -1,30 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { redirect } from 'next/navigation'
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true)
-
   useEffect(() => {
-    // Check if user has already selected a profile
-    const guestSlug = localStorage.getItem('guestSlug')
-    if (guestSlug) {
-      redirect(`/invite/${guestSlug}`)
-    } else {
-      // Redirect to landing page to enter guest code
-      redirect('/login')
-    }
+    // Redirect directly to invitation page (skip login code)
+    redirect('/invite/guest')
   }, [])
 
   return (
     <div className="h-screen w-full bg-netflix-black flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-pulse">
-          <h1 className="text-4xl font-bold text-netflix-red">NetWedding</h1>
-          <p className="text-gray-400 mt-4">Loading...</p>
+      <main className="flex-1 flex items-center justify-center relative z-10">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-netflix-red">IvanJulia</h1>
+          <p className="mt-4 text-xl text-gray-400">Loading your experience...</p>
         </div>
-      </div>
+      </main>
     </div>
   )
 }

@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import './globals.css'
+import '../styles/globals.css'
 import { Providers } from './providers'
 
 export const metadata: Metadata = {
-  title: 'NetWedding - Digital Wedding Invitation',
+  title: 'IvanJulia - Digital Wedding Invitation',
   description: 'Experience our wedding invitation Netflix-style',
   icons: {
     icon: '/favicon.ico',

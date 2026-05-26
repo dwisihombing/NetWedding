@@ -5,12 +5,10 @@ import { useEffect, useState } from 'react'
 
 interface OpeningCinematicProps {
   onComplete: () => void
-  guestSlug: string
 }
 
 export default function OpeningCinematic({
   onComplete,
-  guestSlug,
 }: OpeningCinematicProps) {
   const [progress, setProgress] = useState(0)
   const coupleName = process.env.NEXT_PUBLIC_COUPLE_FIRST_NAME || 'John'
@@ -21,12 +19,12 @@ export default function OpeningCinematic({
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer)
-          setTimeout(onComplete, 500)
+          setTimeout(onComplete, 1200) // Slower complete transition
           return 100
         }
-        return prev + Math.random() * 30
+        return prev + Math.random() * 15 // Slower increment
       })
-    }, 200)
+    }, 400) // Slower interval
 
     return () => clearInterval(timer)
   }, [onComplete])
@@ -105,7 +103,7 @@ export default function OpeningCinematic({
         animate={{ opacity: 0.3 }}
         className="absolute bottom-8 left-8"
       >
-        <p className="text-netflix-red text-3xl font-black">NetWedding</p>
+        <p className="text-netflix-red text-3xl font-black">IvanJulia</p>
       </motion.div>
     </div>
   )

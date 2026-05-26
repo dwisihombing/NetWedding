@@ -41,20 +41,19 @@ NEXT_PUBLIC_RECEPTION_TIME=18:00
 npm run dev
 ```
 
-Open [http://localhost:3000/login](http://localhost:3000/login)
+Open [http://localhost:3000](http://localhost:3000)
 
 ## 5️⃣ Test It Out
 
-1. Enter any 6-digit code (e.g., `ABC123`)
-2. Select a profile
-3. Watch the opening cinematic
-4. Explore all sections
-5. Fill out the RSVP form
+1. Select a profile from "Who's Invited?"
+2. Watch the opening cinematic
+3. Explore all sections
+4. Fill out the RSVP form
 
 ## 🎯 What's Included
 
 ✅ Netflix-style UI with responsive design  
-✅ Who's Watching profile page  
+✅ Who's Invited? profile page  
 ✅ Opening cinematic with animations  
 ✅ Wedding details, gallery, RSVP sections  
 ✅ Supabase backend integration  
@@ -120,18 +119,17 @@ Or see [DEPLOYMENT.md](./DEPLOYMENT.md) for other options
 ## 🎬 Demo Flow
 
 **Guest Experience:**
-1. Click personalized link with their code
-2. Enter code on login page
-3. Select profile (Netflix-style)
-4. Watch animated introduction
-5. Browse wedding info, gallery
-6. Submit RSVP
-7. See confirmation message
+1. Click personalized invitation link
+2. Select profile from "Who's Invited?" (Netflix-style)
+3. Watch animated introduction
+4. Browse wedding info, gallery
+5. Submit RSVP
+6. See confirmation message
 
 **Your Workflow:**
 1. Customize couple names & date
 2. Add your photos
-3. Generate guest codes
+3. Generate guest links
 4. Share links with guests
 5. Monitor RSVPs in Supabase
 6. View analytics (optional)

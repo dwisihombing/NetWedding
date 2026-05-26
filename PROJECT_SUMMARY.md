@@ -9,8 +9,7 @@ A complete, production-ready Next.js application for Netflix-inspired wedding in
 ### 🎯 Core Features Implemented
 
 #### 1. **Authentication & Access**
-- ✅ Guest code entry page (`/login`)
-- ✅ Netflix-style "Who's Watching?" profile selection
+- ✅ Netflix-style "Who's Invited?" profile selection
 - ✅ Personalized guest links with unique slugs
 - ✅ Local storage for session persistence
 
@@ -53,8 +52,7 @@ NetWedding/
 │   ├── api/
 │   │   ├── rsvp/route.ts          # RSVP management
 │   │   └── guest/route.ts         # Guest lookup
-│   ├── login/page.tsx              # Login & Who's Watching
-│   ├── invite/[slug]/page.tsx      # Main invitation
+│   ├── invite/[slug]/page.tsx      # Main invitation with profile selection
 │   ├── layout.tsx                  # Root layout
 │   ├── page.tsx                    # Home redirect
 │   ├── providers.tsx               # React providers
@@ -133,7 +131,7 @@ NetWedding/
    npm run dev
    ```
 
-5. **Visit** http://localhost:3000/login
+5. **Visit** http://localhost:3000
 
 ### 📖 Documentation
 
@@ -156,11 +154,9 @@ NetWedding/
 ### 🎬 User Journey
 
 ```
-Guest receives link with code
+Guest opens invitation link
     ↓
-Enters code at /login
-    ↓
-Selects profile (Who's Watching)
+Selects profile (Who's Invited?)
     ↓
 Watches opening cinematic
     ↓
@@ -178,7 +174,7 @@ Confirmation message
 1. **Customize** - Update couple names, date, location in `.env.local`
 2. **Add Photos** - Upload to Supabase Storage
 3. **Generate Codes** - Run `node scripts/generate-codes.js`
-4. **Test** - Visit `/login` and test the flow
+4. **Test** - Visit `/` (home) and test the flow
 5. **Deploy** - Push to Vercel or your hosting
 6. **Share** - Send personalized links to guests
 

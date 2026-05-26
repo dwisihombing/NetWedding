@@ -12,11 +12,7 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const { data, error } = await supabase
-      .from('guests')
-      .select('*')
-      .eq('unique_slug', guestSlug)
-      .single()
+    const { data, error } = await supabase.from('guests').select('*').eq('unique_slug', guestSlug).single()
 
     if (error) {
       return NextResponse.json(
