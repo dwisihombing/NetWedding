@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: #141414;
+  color: #fff;
+  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+
+body::-webkit-scrollbar {
+  width: 12px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #141414;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #564d4d;
+  border-radius: 6px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #e50914;
+}
+
+/* Netflix-style button animations */
+.btn-netflix {
+  @apply px-6 py-2 rounded font-semibold transition-all duration-200;
+}
+
+.btn-netflix-primary {
+  @apply btn-netflix bg-netflix-red hover:bg-red-700 text-white;
+}
+
+.btn-netflix-secondary {
+  @apply btn-netflix bg-gray-700 hover:bg-gray-600 text-white;
+}
+
+/* Netflix-style card hover effect */
+.netflix-card {
+  @apply transition-transform duration-300 ease-out hover:scale-105;
+}
