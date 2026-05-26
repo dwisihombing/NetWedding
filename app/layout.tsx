@@ -6,7 +6,8 @@ export const metadata: Metadata = {
   title: 'IvanJulia - Digital Wedding Invitation',
   description: 'Experience our wedding invitation Netflix-style',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/image/icon.png',
+    apple: '/image/icon.png',
   },
 }
 
