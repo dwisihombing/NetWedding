@@ -65,11 +65,11 @@ export default function HeroSection({ setActiveSection }: HeroSectionProps) {
       </div>
 
       {/* "Lists of films" (Menu categories) */}
-      <div className="relative z-10 px-4 md:px-12 -mt-6 md:-mt-12 space-y-8 md:space-y-12 pb-20">
+      <div className="relative z-10 px-4 md:px-12 -mt-6 md:-mt-12 pb-20">
         
-        {/* Category: The Details */}
+        {/* Category: Menu Utama */}
         <div>
-          <h2 className="text-lg md:text-2xl font-bold text-gray-200 mb-3 md:mb-4 px-1">{t('nav_details')}</h2>
+          <h2 className="text-lg md:text-2xl font-bold text-gray-200 mb-3 md:mb-4 px-1">Menu Utama</h2>
           <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
              <div onClick={() => setActiveSection('details')} className="snap-start min-w-[200px] md:min-w-[300px] h-32 md:h-40 bg-gray-800 rounded flex items-center justify-center cursor-pointer hover:border-white border-2 border-transparent transition-all overflow-hidden relative group">
                 <div className="absolute inset-0 bg-cover bg-center opacity-50 group-hover:opacity-70 transition-opacity" style={{ backgroundImage: "url('/image/4.-GROOM-682x1024.jpeg')" }}></div>
@@ -79,13 +79,6 @@ export default function HeroSection({ setActiveSection }: HeroSectionProps) {
                 <div className="absolute inset-0 bg-cover bg-center opacity-50 group-hover:opacity-70 transition-opacity" style={{ backgroundImage: "url('/image/5.-BRIDE-750x1024.jpg')" }}></div>
                 <span className="relative z-10 font-bold text-xl">{t('details_reception')}</span>
              </div>
-          </div>
-        </div>
-
-        {/* Category: RSVP */}
-        <div>
-          <h2 className="text-lg md:text-2xl font-bold text-gray-200 mb-3 md:mb-4 px-1">{t('nav_rsvp')}</h2>
-          <div className="flex gap-3 md:gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x">
              <div onClick={() => setActiveSection('rsvp')} className="snap-start min-w-[200px] md:min-w-[300px] h-32 md:h-40 bg-netflix-red/20 rounded flex items-center justify-center cursor-pointer hover:bg-netflix-red/40 border-2 border-netflix-red/50 hover:border-white transition-all group">
                 <div className="text-center">
                   <svg className="w-10 h-10 mx-auto text-white mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5m0 0l-1.14.76a2 2 0 01-2.22 0l-1.14-.76" /></svg>

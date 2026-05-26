@@ -20,13 +20,15 @@ export default function InvitationHub({ guestSlug }: InvitationHubProps) {
   const sections = {
     home: <HeroSection setActiveSection={setActiveSection} />,
     details: <WeddingDetails />,
-    gallery: <GallerySection />,
+    gallery: <GallerySection setActiveSection={setActiveSection} />,
     rsvp: <RSVPForm guestSlug={guestSlug} />,
   }
 
   return (
     <div className="min-h-screen bg-netflix-black flex flex-col">
-      <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+      {activeSection !== 'gallery' && (
+        <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+      )}
 
       <main className="flex-1 w-full overflow-hidden">
         <motion.div
