@@ -20,7 +20,7 @@ export default function InvitationHub({ guestSlug }: InvitationHubProps) {
   const sections = {
     home: <HeroSection setActiveSection={setActiveSection} />,
     details: <WeddingDetails />,
-    gallery: <GallerySection setActiveSection={setActiveSection} />,
+    gallery: <GallerySection setActiveSection={(s) => setActiveSection(s as SectionType)} />,
     rsvp: <RSVPForm guestSlug={guestSlug} />,
   }
 
