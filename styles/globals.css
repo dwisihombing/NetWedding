@@ -49,3 +49,12 @@ body::-webkit-scrollbar-thumb:hover {
 .netflix-card {
   @apply transition-transform duration-300 ease-out hover:scale-105;
 }
+
+/* Hide scrollbar utility */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

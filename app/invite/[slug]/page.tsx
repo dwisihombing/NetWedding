@@ -10,8 +10,18 @@ export default function InvitePage() {
   const params = useParams()
   const guestSlug = params.slug as string
   const [stage, setStage] = useState<'profile' | 'cinema' | 'main'>('profile')
+  const [guestData, setGuestData] = useState<any>(null)
 
   useEffect(() => {
+    // Fetch guest data
+    fetch(`/api/guest?slug=${guestSlug}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.error) {
+          setGuestData(data)
+        }
+      })
+
     const watched = localStorage.getItem(`watched_${guestSlug}`)
     const profile = localStorage.getItem(`profile_${guestSlug}`)
     
@@ -39,6 +49,7 @@ export default function InvitePage() {
       <WhoIsWatching 
         onSelect={(profileName) => handleProfileSelect(profileName)} 
         guestCode={guestSlug}
+        guestData={guestData}
       />
     )
   }

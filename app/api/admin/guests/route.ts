@@ -21,7 +21,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { unique_slug, name, phone, gender, group_size } = body
+    const { unique_slug, name, instagram, phone, gender, group_size, is_group } = body
 
     if (!unique_slug || !name || !phone) {
       return NextResponse.json(
@@ -34,9 +34,11 @@ export async function POST(request: NextRequest) {
       {
         unique_slug,
         name,
+        instagram,
         phone,
         gender: gender || 'L',
         group_size: group_size || 1,
+        is_group: is_group || false,
         rsvp_status: 'pending',
       }
     ])

@@ -11,28 +11,29 @@ export default function OpeningCinematic({
   onComplete,
 }: OpeningCinematicProps) {
   const [progress, setProgress] = useState(0)
-  const coupleName = process.env.NEXT_PUBLIC_COUPLE_FIRST_NAME || 'John'
-  const coupleLastName = process.env.NEXT_PUBLIC_COUPLE_SECOND_NAME || 'Jane'
+  const coupleName = process.env.NEXT_PUBLIC_COUPLE_FIRST_NAME || 'IVAN'
+  const coupleLastName = process.env.NEXT_PUBLIC_COUPLE_SECOND_NAME || 'JULIA'
 
   useEffect(() => {
     const timer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer)
-          setTimeout(onComplete, 1200) // Slower complete transition
+          setTimeout(onComplete, 500) // Faster complete transition
           return 100
         }
-        return prev + Math.random() * 15 // Slower increment
+        return prev + Math.random() * 25 // Faster increment
       })
-    }, 400) // Slower interval
+    }, 200) // Faster interval
 
     return () => clearInterval(timer)
   }, [onComplete])
 
   return (
     <div className="h-screen w-full bg-netflix-black flex flex-col items-center justify-center px-4 relative overflow-hidden">
-      {/* Background video effect */}
-      <div className="absolute inset-0 bg-gradient-to-b from-netflix-red/10 via-netflix-black to-netflix-black">
+      {/* Background image effect */}
+      <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{ backgroundImage: "url('/image/2-SLIDE--scaled.jpg')" }}></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-netflix-red/10 via-netflix-black/80 to-netflix-black">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.5 }}

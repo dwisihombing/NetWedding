@@ -1,31 +1,27 @@
-import { supabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
+import fs from 'fs'
+import path from 'path'
 
 export async function GET() {
   try {
-    const bucket = process.env.SUPABASE_GALLERY_BUCKET || 'gallery'
-    const folder = process.env.SUPABASE_GALLERY_FOLDER || ''
-
-    const { data, error } = await supabase.storage.from(bucket).list(folder, {
-      limit: 100,
-      sortBy: { column: 'name', order: 'asc' },
-    })
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 })
+    const imageDir = path.join(process.cwd(), 'public', 'image')
+    
+    if (!fs.existsSync(imageDir)) {
+      return NextResponse.json({ images: [] }, { status: 200 })
     }
 
-    const images = (data || [])
-      .filter((item) => item.name && !item.name.endsWith('/'))
-      .map((item, index) => {
-        const path = folder ? `${folder}/${item.name}` : item.name
-        const { data: publicData } = supabase.storage.from(bucket).getPublicUrl(path)
-        return {
-          id: `${index + 1}`,
-          title: item.name,
-          imageUrl: publicData.publicUrl,
-        }
-      })
+    const files = fs.readdirSync(imageDir)
+    
+    // Filter only valid image extensions
+    const imageFiles = files.filter(file => 
+      file.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/)
+    )
+
+    const images = imageFiles.map((file, index) => ({
+      id: `${index + 1}`,
+      title: `Wedding Moment ${index + 1}`,
+      imageUrl: `/image/${file}`,
+    }))
 
     return NextResponse.json({ images }, { status: 200 })
   } catch (error) {
