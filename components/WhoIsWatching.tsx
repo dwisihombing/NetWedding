@@ -22,31 +22,30 @@ export default function WhoIsWatching({ onSelect, guestData }: WhoIsWatchingProp
 
   // Generate dynamic profile data based on guestData
   const getGuestProfile = () => {
-    if (!guestData) return { name: 'You', initial: 'Y', color: 'bg-blue-600', isGroup: false, avatar: randomAvatar }
+    if (!guestData) return { name: 'You', initial: 'Y', color: 'bg-blue-600', isGroup: false, avatar: randomAvatar, fallbackAvatar: null }
     
     const initial = guestData.name.charAt(0).toUpperCase()
-    let avatar = (!guestData.is_group && guestData.instagram) ? `https://unavatar.io/instagram/${guestData.instagram}` : null
     
-    // If no instagram avatar, generate a deterministic random avatar from assets based on gender
-    if (!avatar && !guestData.is_group) {
-      // Create a simple hash from the unique_slug to keep the avatar consistent across reloads
+    // Compute the deterministic local avatar
+    let localAvatar = null;
+    if (!guestData.is_group) {
       const slug = guestData.unique_slug || guestData.name || 'guest';
       let hash = 0;
       for (let i = 0; i < slug.length; i++) {
         hash = slug.charCodeAt(i) + ((hash << 5) - hash);
       }
-      
-      // Calculate a number between 1 and 10
       const index = Math.abs(hash) % 10 + 1;
       const paddedIndex = index.toString().padStart(2, '0');
       
-      const gender = guestData.gender || 'L';
+      const gender = (guestData.gender || 'L').toUpperCase();
       const folderPrefix = gender === 'P' ? 'avatar-wanita' : 'avatar-pria';
       
-      avatar = `/avatars/${folderPrefix}-${paddedIndex}.png`;
+      localAvatar = `/avatars/${folderPrefix}-${paddedIndex}.png?v=2`;
     }
+
+    let avatar = (!guestData.is_group && guestData.instagram) ? `https://unavatar.io/instagram/${guestData.instagram}` : localAvatar;
     
-    return { name: guestData.name, initial, color: 'bg-netflix-red', isGroup: guestData.is_group, avatar }
+    return { name: guestData.name, initial, color: 'bg-netflix-red', isGroup: guestData.is_group, avatar, fallbackAvatar: localAvatar }
   }
 
   const guestProfile = getGuestProfile()
@@ -95,9 +94,14 @@ export default function WhoIsWatching({ onSelect, guestData }: WhoIsWatchingProp
                     alt={profile.name} 
                     className="w-full h-full object-cover" 
                     onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      if (e.currentTarget.nextElementSibling) {
-                        (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'flex';
+                      const target = e.currentTarget;
+                      if (profile.fallbackAvatar && !target.src.includes(profile.fallbackAvatar.split('?')[0])) {
+                        target.src = profile.fallbackAvatar;
+                      } else {
+                        target.style.display = 'none';
+                        if (target.nextElementSibling) {
+                          (target.nextElementSibling as HTMLElement).style.display = 'flex';
+                        }
                       }
                     }}
                   />
