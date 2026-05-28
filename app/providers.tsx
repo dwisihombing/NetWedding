@@ -2,11 +2,14 @@
 
 import { ReactNode } from 'react'
 import { LanguageProvider } from '@/contexts/LanguageContext'
+import { ThemeProvider } from 'next-themes'
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
-    <LanguageProvider>
-      {children}
-    </LanguageProvider>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+      <LanguageProvider>
+        {children}
+      </LanguageProvider>
+    </ThemeProvider>
   )
 }

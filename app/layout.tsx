@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import '../styles/globals.css'
 import { Providers } from './providers'
+import AudioPlayer from '@/components/AudioPlayer'
 
 export const metadata: Metadata = {
   title: 'IvanJulia - Digital Wedding Invitation',
@@ -19,7 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="bg-netflix-black">
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <AudioPlayer />
+        </Providers>
       </body>
     </html>
   )

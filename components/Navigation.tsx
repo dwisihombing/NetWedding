@@ -41,7 +41,7 @@ export default function Navigation({
           onClick={() => setActiveSection('home')}
           className="text-2xl md:text-3xl font-black text-netflix-red cursor-pointer hover:opacity-80 transition-opacity"
         >
-          IvanJulia
+          Ivan & Julia
         </motion.h1>
 
         <div className="hidden md:flex gap-4">

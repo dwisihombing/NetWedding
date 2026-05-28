@@ -1,7 +1,8 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useState, useEffect } from 'react'
 
 interface HeroSectionProps {
   setActiveSection: (section: any) => void
@@ -13,11 +14,39 @@ export default function HeroSection({ setActiveSection }: HeroSectionProps) {
   const firstCoupleName = process.env.NEXT_PUBLIC_COUPLE_FIRST_NAME || 'IVAN'
   const secondCoupleName = process.env.NEXT_PUBLIC_COUPLE_SECOND_NAME || 'JULIA'
 
+  const backgroundImages = [
+    '/image/1-COVER-scaled.jpg',
+    '/image/2-SLIDE--scaled.jpg',
+    '/image/3-scaled.jpg',
+    '/image/7-LOVE-TOKEN-scaled.jpg'
+  ]
+  
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length)
+    }, 4000) // Rotate image every 4 seconds
+    return () => clearInterval(timer)
+  }, [backgroundImages.length])
+
   return (
     <section className="min-h-screen w-full relative overflow-y-auto pb-20 overflow-x-hidden">
       {/* Hero Background (Netflix style) */}
-      <div className="relative min-h-[85vh] w-full bg-gradient-to-br from-gray-900 to-netflix-black flex flex-col justify-end pt-28 pb-16 px-4 md:px-12 z-0">
-        <div className="absolute inset-0 bg-cover bg-top opacity-50" style={{ backgroundImage: "url('/image/1-COVER-scaled.jpg')" }}></div>
+      <div className="relative min-h-[85vh] w-full bg-netflix-black flex flex-col justify-end pt-28 pb-16 px-4 md:px-12 z-0 overflow-hidden">
+        
+        <AnimatePresence>
+          <motion.div
+            key={currentImageIndex}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 0.5, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5 }}
+            className="absolute inset-0 bg-cover bg-top"
+            style={{ backgroundImage: `url('${backgroundImages[currentImageIndex]}')` }}
+          />
+        </AnimatePresence>
+
         <div className="absolute inset-0 bg-gradient-to-t from-netflix-black via-netflix-black/60 to-transparent"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-netflix-black via-transparent to-transparent"></div>
 
