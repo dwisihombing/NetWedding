@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface WhoIsWatchingProps {
   onSelect: (profileName: string) => void
@@ -11,10 +11,18 @@ interface WhoIsWatchingProps {
 
 export default function WhoIsWatching({ onSelect, guestData }: WhoIsWatchingProps) {
   const [selected, setSelected] = useState(false)
+  const [randomAvatar, setRandomAvatar] = useState<string | null>(null)
+
+  useEffect(() => {
+    const randomGender = Math.random() > 0.5 ? 'pria' : 'wanita';
+    const randomIndex = Math.floor(Math.random() * 10) + 1;
+    const paddedIndex = randomIndex.toString().padStart(2, '0');
+    setRandomAvatar(`/avatars/avatar-${randomGender}-${paddedIndex}.png`);
+  }, [])
 
   // Generate dynamic profile data based on guestData
   const getGuestProfile = () => {
-    if (!guestData) return { name: 'You', initial: 'Y', color: 'bg-blue-600', isGroup: false, avatar: null }
+    if (!guestData) return { name: 'You', initial: 'Y', color: 'bg-blue-600', isGroup: false, avatar: randomAvatar }
     
     const initial = guestData.name.charAt(0).toUpperCase()
     let avatar = (!guestData.is_group && guestData.instagram) ? `https://unavatar.io/instagram/${guestData.instagram}` : null

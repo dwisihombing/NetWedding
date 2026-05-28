@@ -6,8 +6,8 @@ import { usePathname } from 'next/navigation'
 
 export default function AudioPlayer() {
   const pathname = usePathname()
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [hasInteracted, setHasInteracted] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [hasInteracted, setHasInteracted] = useState(true)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
@@ -29,7 +29,10 @@ export default function AudioPlayer() {
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
-        audioRef.current.play().catch(e => console.error("Audio playback failed:", e))
+        audioRef.current.play().catch(e => {
+          console.error("Audio playback failed:", e)
+          setIsPlaying(false)
+        })
       } else {
         audioRef.current.pause()
       }
