@@ -7,22 +7,17 @@ export async function DELETE(
 ) {
   try {
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
     const id = params.id
 
     if (!id) {
       return NextResponse.json(
-        { error: 'Guest ID is required' },
+        { error: 'Staff ID is required' },
         { status: 400 }
       )
     }
 
-    const { error } = await supabase.from('guests').delete().eq('id', id)
+    // Instead of actual delete, we can just deactivate, but let's delete for simplicity as requested by UI mock
+    const { error } = await supabase.from('staff_roles').delete().eq('id', id)
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 })

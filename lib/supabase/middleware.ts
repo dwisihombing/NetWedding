@@ -58,31 +58,77 @@ export async function updateSession(request: NextRequest) {
 
   const allowedEmail = process.env.ADMIN_EMAIL
 
-  // Protect /admin routes
-  if (request.nextUrl.pathname.startsWith('/admin')) {
+  const isProtectedPage = request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/parhobas')
+  const isProtectedApi = request.nextUrl.pathname.startsWith('/api/admin')
+
+  if (isProtectedPage || isProtectedApi) {
     if (!user) {
-      // User is not logged in, redirect to login page
+      if (isProtectedApi) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
       const url = request.nextUrl.clone()
       url.pathname = '/login'
       return NextResponse.redirect(url)
     }
 
-    // Check if the user is the allowed admin
-    if (allowedEmail && user.email !== allowedEmail) {
-      // Unauthenticated email, deny access
-      const url = request.nextUrl.clone()
-      url.pathname = '/login'
-      url.searchParams.set('error', 'Unauthorized email')
-      return NextResponse.redirect(url)
+    // Check if user is the master admin
+    const isMasterAdmin = allowedEmail && user.email === allowedEmail
+    
+    if (!isMasterAdmin) {
+      // Check if user is in staff_roles
+      const { data: staffData } = await supabase
+        .from('staff_roles')
+        .select('role')
+        .eq('email', user.email)
+        .eq('status', 'Aktif')
+        .single()
+        
+      if (!staffData) {
+        if (isProtectedApi) {
+          return NextResponse.json({ error: 'Forbidden: Email not registered' }, { status: 403 })
+        }
+        const url = request.nextUrl.clone()
+        url.pathname = '/login'
+        url.searchParams.set('error', 'Unauthorized email')
+        return NextResponse.redirect(url)
+      }
+
+      // If user is trying to access /admin but is only a parhobas, redirect to /parhobas
+      if (request.nextUrl.pathname === '/admin' && staffData.role !== 'admin') {
+         const url = request.nextUrl.clone()
+         url.pathname = '/parhobas'
+         return NextResponse.redirect(url)
+      }
+
+      // Restrict staff API to admins only
+      if (request.nextUrl.pathname.startsWith('/api/admin/staff') && staffData.role !== 'admin') {
+        return NextResponse.json({ error: 'Forbidden: Admin only' }, { status: 403 })
+      }
     }
   }
 
   // Redirect authenticated user away from login page
   if (request.nextUrl.pathname === '/login' && user) {
-    if (!allowedEmail || user.email === allowedEmail) {
-       const url = request.nextUrl.clone()
-       url.pathname = '/admin'
-       return NextResponse.redirect(url)
+    const isMasterAdmin = allowedEmail && user.email === allowedEmail
+    
+    // Check role to decide where to redirect
+    if (isMasterAdmin) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/admin'
+      return NextResponse.redirect(url)
+    }
+    
+    const { data: staffData } = await supabase
+      .from('staff_roles')
+      .select('role')
+      .eq('email', user.email)
+      .eq('status', 'Aktif')
+      .single()
+
+    if (staffData) {
+      const url = request.nextUrl.clone()
+      url.pathname = staffData.role === 'admin' ? '/admin' : '/parhobas'
+      return NextResponse.redirect(url)
     }
   }
 

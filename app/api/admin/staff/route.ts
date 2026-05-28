@@ -4,14 +4,8 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET() {
   try {
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
     const { data, error } = await supabase
-      .from('guests')
+      .from('staff_roles')
       .select('*')
       .order('created_at', { ascending: false })
 
@@ -28,32 +22,22 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
     const body = await request.json()
-    const { unique_slug, name, instagram, phone, gender, group_size, is_group } = body
+    const { email, name, role } = body
 
-    if (!unique_slug || !name || !phone) {
+    if (!email || !name) {
       return NextResponse.json(
-        { error: 'unique_slug, name, and phone are required' },
+        { error: 'Email and name are required' },
         { status: 400 }
       )
     }
 
-    const { data, error } = await supabase.from('guests').insert([
+    const { data, error } = await supabase.from('staff_roles').insert([
       {
-        unique_slug,
+        email,
         name,
-        instagram,
-        phone,
-        gender: gender || 'L',
-        group_size: group_size || 1,
-        is_group: is_group || false,
-        rsvp_status: 'pending',
+        role: role || 'parhobas',
+        status: 'Aktif',
       }
     ])
 

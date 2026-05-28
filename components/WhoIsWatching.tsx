@@ -17,7 +17,26 @@ export default function WhoIsWatching({ onSelect, guestData }: WhoIsWatchingProp
     if (!guestData) return { name: 'You', initial: 'Y', color: 'bg-blue-600', isGroup: false, avatar: null }
     
     const initial = guestData.name.charAt(0).toUpperCase()
-    const avatar = (!guestData.is_group && guestData.instagram) ? `https://unavatar.io/instagram/${guestData.instagram}` : null
+    let avatar = (!guestData.is_group && guestData.instagram) ? `https://unavatar.io/instagram/${guestData.instagram}` : null
+    
+    // If no instagram avatar, generate a deterministic random avatar from assets based on gender
+    if (!avatar && !guestData.is_group) {
+      // Create a simple hash from the unique_slug to keep the avatar consistent across reloads
+      const slug = guestData.unique_slug || guestData.name || 'guest';
+      let hash = 0;
+      for (let i = 0; i < slug.length; i++) {
+        hash = slug.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      
+      // Calculate a number between 1 and 10
+      const index = Math.abs(hash) % 10 + 1;
+      const paddedIndex = index.toString().padStart(2, '0');
+      
+      const gender = guestData.gender || 'L';
+      const folderPrefix = gender === 'P' ? 'avatar-wanita' : 'avatar-pria';
+      
+      avatar = `/avatars/${folderPrefix}-${paddedIndex}.png`;
+    }
     
     return { name: guestData.name, initial, color: 'bg-netflix-red', isGroup: guestData.is_group, avatar }
   }
