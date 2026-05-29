@@ -41,7 +41,7 @@ export default function AdminLayout({
       {/* Sidebar */}
       <aside className="w-full md:w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col shadow-sm transition-colors">
         <div className="h-16 flex items-center justify-between px-6 border-b border-gray-100 dark:border-gray-700">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">Admin Panel</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">Parhobas</h1>
           <ThemeToggle />
         </div>
         

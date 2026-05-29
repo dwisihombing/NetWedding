@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 export default function Home() {
   useEffect(() => {
     // Redirect directly to invitation page (skip login code)
-    redirect('/invite/guest')
+    redirect('/guest')
   }, [])
 
   return (

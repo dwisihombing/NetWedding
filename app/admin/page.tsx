@@ -9,6 +9,9 @@ export default function AdminDashboardPage() {
   const [submitting, setSubmitting] = useState(false)
   const [toast, setToast] = useState({ message: '', type: 'success' })
   const [formData, setFormData] = useState({ name: '', email: '', role: 'parhobas' })
+  const [editingRoleId, setEditingRoleId] = useState<string | null>(null)
+  const [editingRole, setEditingRole] = useState('parhobas')
+  const [roleUpdatingId, setRoleUpdatingId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchStaff()
@@ -73,6 +76,37 @@ export default function AdminDashboardPage() {
       }
     } catch (err) {
       showToast('Terjadi kesalahan jaringan', 'error')
+    }
+  }
+
+  const startEditRole = (person: any) => {
+    setEditingRoleId(person.id)
+    setEditingRole(person.role || 'parhobas')
+  }
+
+  const handleSaveRole = async (id: string) => {
+    setRoleUpdatingId(id)
+
+    try {
+      const res = await fetch(`/api/admin/staff/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: editingRole })
+      })
+
+      if (res.ok) {
+        setEditingRoleId(null)
+        setRoleUpdatingId(null)
+        fetchStaff()
+        showToast('Role berhasil diperbarui')
+      } else {
+        const data = await res.json()
+        showToast(data.error || 'Gagal memperbarui role', 'error')
+      }
+    } catch (err) {
+      showToast('Terjadi kesalahan jaringan', 'error')
+    } finally {
+      setRoleUpdatingId(null)
     }
   }
 
@@ -176,22 +210,59 @@ export default function AdminDashboardPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-white">{person.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{person.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 px-2 py-1 rounded-md text-xs font-bold capitalize">
-                      {person.role}
-                    </span>
+                    {editingRoleId === person.id ? (
+                      <select
+                        value={editingRole}
+                        onChange={e => setEditingRole(e.target.value)}
+                        className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-sm p-2"
+                      >
+                        <option value="parhobas">Parhobas</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    ) : (
+                      <span className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 px-2 py-1 rounded-md text-xs font-bold capitalize">
+                        {person.role}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span className="bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800 px-2.5 py-1 rounded-full text-xs font-bold">
                       {person.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <button 
-                      onClick={() => handleDelete(person.id)}
-                      className="text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 px-3 py-1.5 rounded-lg transition-colors border border-red-200 dark:border-red-800 font-medium text-xs"
-                    >
-                      Nonaktifkan
-                    </button>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                    {editingRoleId === person.id ? (
+                      <>
+                        <button
+                          onClick={() => handleSaveRole(person.id)}
+                          disabled={roleUpdatingId === person.id}
+                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-colors disabled:opacity-50"
+                        >
+                          {roleUpdatingId === person.id ? 'Menyimpan...' : 'Simpan'}
+                        </button>
+                        <button
+                          onClick={() => setEditingRoleId(null)}
+                          className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+                        >
+                          Batal
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => startEditRole(person)}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-colors"
+                        >
+                          Edit Role
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(person.id)}
+                          className="text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 px-3 py-1.5 rounded-lg transition-colors border border-red-200 dark:border-red-800 font-medium text-xs"
+                        >
+                          Nonaktifkan
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}
