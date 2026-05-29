@@ -15,14 +15,16 @@ const profiles: Record<ProfileKey, {
   groom: {
     title: 'THE GROOM', 
     name: 'Ivan Daniel Andrianta Sitepu S.Si',
-    parents: 'Son of Mr. Saut Maruli Sitepu & Mrs. Sri Julina Ginting',
+    parents: 'Mr. Saut Maruli Sitepu & Mrs. Sri Julina Ginting',
     image: '/image/4.-GROOM-682x1024.jpeg',
+    accent: 'Beloved son of the Sitepu family',
   },
   bride: {
     title: 'THE BRIDE',
     name: 'Julia Ester Stepany Nababan S.K.M',
-    parents: 'Daughter of Mr. Dumas Nababan & Mrs. Lisnauli Sitorus S.PAK., M.Pd',
-    image: '/image/5.-BRIDE-750x1024.jpg'
+    parents: 'Mr. Dumas Nababan & Mrs. Lisnauli Sitorus S.PAK., M.Pd',
+    image: '/image/5.-BRIDE-750x1024.jpg',
+    accent: 'Cherished daughter of the Nababan family',
   },
 }
 
