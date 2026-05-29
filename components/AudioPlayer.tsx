@@ -97,7 +97,7 @@ export default function AudioPlayer() {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         onClick={togglePlay}
-        className="fixed bottom-6 right-6 z-50 p-3 bg-netflix-black/80 rounded-full border border-gray-600 text-white hover:bg-gray-800 transition-colors shadow-lg backdrop-blur-sm"
+        className="fixed bottom-16 md:bottom-6 right-6 z-50 p-3 bg-netflix-black/80 rounded-full border border-gray-600 text-white hover:bg-gray-800 transition-colors shadow-lg backdrop-blur-sm"
         aria-label={isPlaying ? "Pause music" : "Play music"}
       >
         {isPlaying ? (

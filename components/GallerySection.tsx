@@ -435,9 +435,11 @@ export default function GallerySection({ setActiveSection }: GallerySectionProps
 
               <div className="w-2" />
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>
+
     </section>
   )
 }
