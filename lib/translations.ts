@@ -11,7 +11,7 @@ export const translations = {
     cinematic_ready: 'Get ready for an unforgettable celebration',
     
     // Home/Hero
-    hero_married: 'Are Getting Married!',
+    hero_married: '#VANdmyJULIet',
     hero_days: 'Days',
     hero_until: 'until the big day',
     hero_play: 'Play',
@@ -58,7 +58,7 @@ export const translations = {
     cinematic_ready: 'Bersiaplah untuk perayaan yang tak terlupakan',
     
     // Home/Hero
-    hero_married: 'Akan Menikah!',
+    hero_married: '#VANdmyJULIet',
     hero_days: 'Hari',
     hero_until: 'menuju hari bahagia',
     hero_play: 'Putar',

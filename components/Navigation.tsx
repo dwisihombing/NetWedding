@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useState, useEffect, useRef } from 'react'
+import { useParams } from 'next/navigation'
 import { resolveGuestAvatar } from '@/lib/avatar'
 
 interface NavigationProps {
@@ -22,12 +23,16 @@ export default function Navigation({
   const [reminderSet, setReminderSet] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const bellRef = useRef<HTMLDivElement>(null)
+  const params = useParams()
+  const urlSlug = (params?.slug as string) || ''
 
   const weddingDate = process.env.NEXT_PUBLIC_WEDDING_DATE || '2026-07-17'
   const coupleFirst = process.env.NEXT_PUBLIC_COUPLE_FIRST_NAME || 'IVAN'
   const coupleSecond = process.env.NEXT_PUBLIC_COUPLE_SECOND_NAME || 'JULIA'
 
-  const { avatar, fallbackAvatar, initial } = resolveGuestAvatar(guestData)
+  // Use URL slug as a stable seed when guestData is missing,
+  // so the navbar avatar still picks a consistent image per tamu.
+  const { avatar, fallbackAvatar, initial } = resolveGuestAvatar(guestData, urlSlug)
 
   useEffect(() => {
     const handleScroll = () => {

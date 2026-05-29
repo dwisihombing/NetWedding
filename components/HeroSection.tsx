@@ -167,6 +167,28 @@ export default function HeroSection({ setActiveSection }: HeroSectionProps) {
                  </div>
                )
              })}
+
+             {/* Doa Pernikahan card */}
+             <div
+               onClick={() =>
+                 router.push(
+                   `/prayer${guestSlug ? `?from=${encodeURIComponent('/invite/' + guestSlug)}` : ''}`
+                 )
+               }
+               className="snap-start min-w-[200px] md:min-w-[300px] h-32 md:h-40 bg-gray-800 rounded cursor-pointer hover:border-white border-2 border-transparent transition-all overflow-hidden relative group"
+             >
+               <div
+                 className="absolute inset-0 bg-cover bg-center opacity-70 group-hover:opacity-90 transition-opacity"
+                 style={{ backgroundImage: "url('/image/7-LOVE-TOKEN-scaled.jpg')" }}
+               />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/20" />
+               <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-3">
+                 <span className="font-bold text-lg md:text-xl text-white drop-shadow-lg leading-tight">
+                   Doa Pernikahan
+                 </span>
+                 <span className="text-[10px] md:text-xs text-gray-300 mt-1 tracking-wide">A prayer for the couple</span>
+               </div>
+             </div>
           </div>
         </div>
 

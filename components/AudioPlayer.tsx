@@ -8,6 +8,9 @@ export default function AudioPlayer() {
   const pathname = usePathname()
   const [isPlaying, setIsPlaying] = useState(false)
   const [hasInteracted, setHasInteracted] = useState(false)
+  // When the Gallery section is open it owns its own audio track and we mute
+  // this background track. Tracked via window-level CustomEvents.
+  const [galleryActive, setGalleryActive] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
@@ -26,27 +29,48 @@ export default function AudioPlayer() {
     }
   }, [hasInteracted])
 
+  // Listen for Gallery mount / unmount events
   useEffect(() => {
-    if (audioRef.current && isPlaying) {
+    const onActive = () => setGalleryActive(true)
+    const onInactive = () => setGalleryActive(false)
+    window.addEventListener('gallery:active', onActive)
+    window.addEventListener('gallery:inactive', onInactive)
+    return () => {
+      window.removeEventListener('gallery:active', onActive)
+      window.removeEventListener('gallery:inactive', onInactive)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!audioRef.current) return
+    // Pause this background track whenever Gallery is showing.
+    if (galleryActive) {
+      audioRef.current.pause()
+      return
+    }
+    if (isPlaying) {
       audioRef.current.play().catch(e => {
         console.log("Audio playback blocked by browser:", e)
         setIsPlaying(false)
       })
-    } else if (audioRef.current && !isPlaying) {
+    } else {
       audioRef.current.pause()
     }
-  }, [isPlaying])
+  }, [isPlaying, galleryActive])
 
   // Attempt autoplay on mount
   useEffect(() => {
-    if (audioRef.current) {
+    if (audioRef.current && !galleryActive) {
       audioRef.current.play().then(() => {
         setIsPlaying(true)
         setHasInteracted(true)
-      }).catch(e => {
-        console.log("Autoplay waiting for interaction")
+      }).catch(() => {
+        // Autoplay waiting for interaction
       })
     }
+    // We intentionally only run this on mount; subsequent state shifts are
+    // handled by the effect above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const togglePlay = (e: React.MouseEvent) => {
@@ -57,6 +81,9 @@ export default function AudioPlayer() {
   if (pathname?.startsWith('/admin') || pathname?.startsWith('/parhobas') || pathname?.startsWith('/login')) {
     return null
   }
+
+  // Hide the floating button while the Gallery is active (Gallery has its own controls)
+  if (galleryActive) return null
 
   return (
     <>
