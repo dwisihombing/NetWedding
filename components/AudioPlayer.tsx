@@ -20,12 +20,19 @@ export default function AudioPlayer() {
         setIsPlaying(true)
       }
     }
-    
+
     document.addEventListener('click', handleInteract)
     document.addEventListener('touchstart', handleInteract)
+    document.addEventListener('touchmove', handleInteract)
+    document.addEventListener('wheel', handleInteract)
+    window.addEventListener('scroll', handleInteract, { passive: true })
+
     return () => {
       document.removeEventListener('click', handleInteract)
       document.removeEventListener('touchstart', handleInteract)
+      document.removeEventListener('touchmove', handleInteract)
+      document.removeEventListener('wheel', handleInteract)
+      window.removeEventListener('scroll', handleInteract)
     }
   }, [hasInteracted])
 
@@ -97,7 +104,7 @@ export default function AudioPlayer() {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         onClick={togglePlay}
-        className="fixed bottom-16 md:bottom-6 right-6 z-50 p-3 bg-netflix-black/80 rounded-full border border-gray-600 text-white hover:bg-gray-800 transition-colors shadow-lg backdrop-blur-sm"
+        className="fixed bottom-24 md:bottom-6 right-4 md:right-6 z-50 p-3 bg-netflix-black/90 rounded-full border border-white/20 text-white hover:bg-gray-800 transition-colors shadow-2xl backdrop-blur-2xl"
         aria-label={isPlaying ? "Pause music" : "Play music"}
       >
         {isPlaying ? (
