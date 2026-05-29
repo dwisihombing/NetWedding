@@ -58,5 +58,5 @@ export default function InvitePage() {
     return <OpeningCinematic onComplete={handleCinematicComplete} />
   }
 
-  return <InvitationHub guestSlug={guestSlug} />
+  return <InvitationHub guestSlug={guestSlug} guestData={guestData} />
 }

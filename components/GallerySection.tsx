@@ -78,6 +78,20 @@ export default function GallerySection({ setActiveSection }: GallerySectionProps
 
       {/* Title & Scene Selection Bar (Bottom) */}
       <div className="relative z-10 w-full px-4 md:px-12 pb-6 md:pb-12 pt-32 bg-gradient-to-t from-black to-transparent">
+        <motion.blockquote
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.6 }}
+          className="max-w-3xl mb-6 border-l-4 border-netflix-red pl-4"
+        >
+          <p className="text-white text-base md:text-xl italic font-light leading-relaxed drop-shadow-lg">
+            &ldquo;So they are no longer two, but one flesh. Therefore what God has joined together, let no one separate.&rdquo;
+          </p>
+          <footer className="text-gray-300 text-xs md:text-sm mt-2 tracking-wider drop-shadow-md">
+            — Matthew 19:6 —
+          </footer>
+        </motion.blockquote>
+
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

@@ -12,9 +12,10 @@ type SectionType = 'home' | 'details' | 'gallery' | 'rsvp'
 
 interface InvitationHubProps {
   guestSlug: string
+  guestData?: any
 }
 
-export default function InvitationHub({ guestSlug }: InvitationHubProps) {
+export default function InvitationHub({ guestSlug, guestData }: InvitationHubProps) {
   const [activeSection, setActiveSection] = useState<SectionType>('home')
 
   const sections = {
@@ -27,7 +28,11 @@ export default function InvitationHub({ guestSlug }: InvitationHubProps) {
   return (
     <div className="min-h-screen bg-netflix-black flex flex-col">
       {activeSection !== 'gallery' && (
-        <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+        <Navigation
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+          guestData={guestData}
+        />
       )}
 
       <main className="flex-1 w-full overflow-hidden">

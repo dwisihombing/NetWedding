@@ -14,7 +14,7 @@ export const translations = {
     hero_married: 'Are Getting Married!',
     hero_days: 'Days',
     hero_until: 'until the big day',
-    hero_play: 'Play Cinematic',
+    hero_play: 'Play',
     hero_more_info: 'More Info',
     
     // Details
@@ -28,6 +28,7 @@ export const translations = {
     
     // RSVP
     rsvp_title: 'RSVP',
+    rsvp_full: 'Répondez S\'il Vous Plaît',
     rsvp_subtitle: 'Please let us know if you can join us',
     rsvp_name: 'Name',
     rsvp_name_placeholder: 'Your name',
@@ -40,7 +41,7 @@ export const translations = {
     rsvp_attend_both: 'Both (Matrimony & Reception)',
     rsvp_attend_no: 'Sorry, can\'t make it',
     rsvp_guests_label: 'How many guests (including you)?',
-    rsvp_submit: 'Submit RSVP',
+    rsvp_submit: 'Submit',
     rsvp_submitting: 'Submitting...',
     rsvp_success: 'Thank you! Your RSVP has been received.',
     rsvp_error: 'Something went wrong. Please try again.',
@@ -60,7 +61,7 @@ export const translations = {
     hero_married: 'Akan Menikah!',
     hero_days: 'Hari',
     hero_until: 'menuju hari bahagia',
-    hero_play: 'Putar Intro',
+    hero_play: 'Putar',
     hero_more_info: 'Info Lanjut',
     
     // Details
@@ -74,6 +75,7 @@ export const translations = {
     
     // RSVP
     rsvp_title: 'Kehadiran',
+    rsvp_full: 'Répondez S\'il Vous Plaît',
     rsvp_subtitle: 'Beritahu kami jika Anda bisa hadir',
     rsvp_name: 'Nama',
     rsvp_name_placeholder: 'Nama Anda',
@@ -86,7 +88,7 @@ export const translations = {
     rsvp_attend_both: 'Keduanya (Pemberkatan & Resepsi)',
     rsvp_attend_no: 'Maaf, tidak bisa hadir',
     rsvp_guests_label: 'Berapa orang yang hadir (termasuk Anda)?',
-    rsvp_submit: 'Kirim RSVP',
+    rsvp_submit: 'Kirim',
     rsvp_submitting: 'Mengirim...',
     rsvp_success: 'Terima kasih! RSVP Anda telah diterima.',
     rsvp_error: 'Terjadi kesalahan. Silakan coba lagi.',

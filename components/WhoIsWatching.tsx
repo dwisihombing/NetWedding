@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 
 interface WhoIsWatchingProps {
   onSelect: (profileName: string) => void
@@ -11,48 +11,55 @@ interface WhoIsWatchingProps {
 
 export default function WhoIsWatching({ onSelect, guestData }: WhoIsWatchingProps) {
   const [selected, setSelected] = useState(false)
-  const [randomAvatar, setRandomAvatar] = useState<string | null>(null)
+  const [avatarLoaded, setAvatarLoaded] = useState(false)
 
-  useEffect(() => {
-    const randomGender = Math.random() > 0.5 ? 'pria' : 'wanita';
-    const randomIndex = Math.floor(Math.random() * 10) + 1;
-    const paddedIndex = randomIndex.toString().padStart(2, '0');
-    setRandomAvatar(`/avatars/avatar-${randomGender}-${paddedIndex}.png`);
-  }, [])
-
-  // Generate dynamic profile data based on guestData
-  const getGuestProfile = () => {
-    if (!guestData) return { name: 'You', initial: 'Y', color: 'bg-blue-600', isGroup: false, avatar: randomAvatar, fallbackAvatar: null }
-    
-    const initial = guestData.name.charAt(0).toUpperCase()
-    
-    // Compute the deterministic local avatar
-    let localAvatar = null;
-    if (!guestData.is_group) {
-      const slug = guestData.unique_slug || guestData.name || 'guest';
-      let hash = 0;
-      for (let i = 0; i < slug.length; i++) {
-        hash = slug.charCodeAt(i) + ((hash << 5) - hash);
+  // Compute avatar deterministically (no random + no useEffect = no flicker)
+  const guestProfile = useMemo(() => {
+    if (!guestData) {
+      return {
+        name: 'You',
+        initial: 'Y',
+        color: 'bg-blue-600',
+        isGroup: false,
+        avatar: '/avatars/avatar-pria-01.png',
+        fallbackAvatar: null as string | null,
       }
-      const index = Math.abs(hash) % 10 + 1;
-      const paddedIndex = index.toString().padStart(2, '0');
-      
-      const gender = (guestData.gender || 'L').toUpperCase();
-      const folderPrefix = gender === 'P' ? 'avatar-wanita' : 'avatar-pria';
-      
-      localAvatar = `/avatars/${folderPrefix}-${paddedIndex}.png?v=2`;
     }
 
-    let avatar = (!guestData.is_group && guestData.instagram) ? `https://unavatar.io/instagram/${guestData.instagram}` : localAvatar;
-    
-    return { name: guestData.name, initial, color: 'bg-netflix-red', isGroup: guestData.is_group, avatar, fallbackAvatar: localAvatar }
-  }
+    const initial = guestData.name.charAt(0).toUpperCase()
 
-  const guestProfile = getGuestProfile()
+    let localAvatar: string | null = null
+    if (!guestData.is_group) {
+      const slug = guestData.unique_slug || guestData.name || 'guest'
+      let hash = 0
+      for (let i = 0; i < slug.length; i++) {
+        hash = slug.charCodeAt(i) + ((hash << 5) - hash)
+      }
+      const index = (Math.abs(hash) % 10) + 1
+      const paddedIndex = index.toString().padStart(2, '0')
 
-  const profiles = [
-    guestProfile,
-  ]
+      const gender = (guestData.gender || 'L').toUpperCase()
+      const folderPrefix = gender === 'P' ? 'avatar-wanita' : 'avatar-pria'
+
+      localAvatar = `/avatars/${folderPrefix}-${paddedIndex}.png`
+    }
+
+    const avatar =
+      !guestData.is_group && guestData.instagram
+        ? `https://unavatar.io/instagram/${guestData.instagram}`
+        : localAvatar
+
+    return {
+      name: guestData.name,
+      initial,
+      color: 'bg-netflix-red',
+      isGroup: guestData.is_group,
+      avatar,
+      fallbackAvatar: localAvatar,
+    }
+  }, [guestData])
+
+  const profiles = [guestProfile]
 
   return (
     <div className="h-screen w-full bg-netflix-black flex flex-col items-center justify-center px-4">
@@ -61,7 +68,7 @@ export default function WhoIsWatching({ onSelect, guestData }: WhoIsWatchingProp
         animate={{ opacity: 1, y: 0 }}
         className="text-3xl md:text-5xl font-medium text-white mb-8 md:mb-12 text-center tracking-wide"
       >
-        Who&apos;s Invited?
+        Who&apos;s Watching?
       </motion.h1>
 
       <div className="flex gap-8 md:gap-12 flex-wrap justify-center mb-16">
@@ -88,24 +95,37 @@ export default function WhoIsWatching({ onSelect, guestData }: WhoIsWatchingProp
                 </svg>
               ) : profile.avatar ? (
                 <div className="relative w-full h-full">
+                  {/* Skeleton placeholder while image loads (prevents flicker) */}
+                  {!avatarLoaded && (
+                    <div className="absolute inset-0 bg-gray-800 animate-pulse" />
+                  )}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img 
-                    src={profile.avatar} 
-                    alt={profile.name} 
-                    className="w-full h-full object-cover" 
+                  <img
+                    src={profile.avatar}
+                    alt={profile.name}
+                    className={`w-full h-full object-cover transition-opacity duration-300 ${
+                      avatarLoaded ? 'opacity-100' : 'opacity-0'
+                    }`}
+                    onLoad={() => setAvatarLoaded(true)}
                     onError={(e) => {
-                      const target = e.currentTarget;
-                      if (profile.fallbackAvatar && !target.src.includes(profile.fallbackAvatar.split('?')[0])) {
-                        target.src = profile.fallbackAvatar;
+                      const target = e.currentTarget
+                      if (
+                        profile.fallbackAvatar &&
+                        !target.src.includes(profile.fallbackAvatar)
+                      ) {
+                        target.src = profile.fallbackAvatar
                       } else {
-                        target.style.display = 'none';
+                        target.style.display = 'none'
+                        setAvatarLoaded(true)
                         if (target.nextElementSibling) {
-                          (target.nextElementSibling as HTMLElement).style.display = 'flex';
+                          ;(target.nextElementSibling as HTMLElement).style.display = 'flex'
                         }
                       }
                     }}
                   />
-                  <span className="hidden absolute inset-0 items-center justify-center text-6xl md:text-7xl font-bold">{profile.initial}</span>
+                  <span className="hidden absolute inset-0 items-center justify-center text-6xl md:text-7xl font-bold">
+                    {profile.initial}
+                  </span>
                 </div>
               ) : (
                 profile.initial
