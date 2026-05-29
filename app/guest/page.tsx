@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation'
+import InvitePageClient from '@/components/InvitePageClient'
 
 export default function GuestPage() {
-  redirect('/invite/guest')
+  return <InvitePageClient guestSlug="guest" />
 }
