@@ -45,3 +45,31 @@ CREATE POLICY "Allow auth delete"
 ON public.staff_roles FOR DELETE 
 TO authenticated 
 USING (true);
+
+-- 6. Create the orders table for invitation orders
+CREATE TABLE IF NOT EXISTS public.orders (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    package TEXT NOT NULL,
+    groom_name TEXT NOT NULL,
+    bride_name TEXT NOT NULL,
+    religion TEXT NOT NULL,
+    song_cover TEXT NOT NULL,
+    song_main TEXT NOT NULL,
+    event_date DATE NOT NULL,
+    event_time TEXT NOT NULL,
+    event_location TEXT NOT NULL,
+    notes TEXT,
+    status TEXT NOT NULL DEFAULT 'Pending',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public insert on orders" 
+ON public.orders FOR INSERT 
+WITH CHECK (true);
+
+CREATE POLICY "Allow admin read orders" 
+ON public.orders FOR SELECT 
+TO authenticated 
+USING (true);
