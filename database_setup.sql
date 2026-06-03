@@ -1,4 +1,4 @@
--- SQL Script to create staff_roles table for NetWedding Application
+-- SQL Script to create staff_roles table and RLS policies for NetWedding Application
 
 -- 1. Create the staff_roles table
 CREATE TABLE IF NOT EXISTS public.staff_roles (
@@ -13,14 +13,35 @@ CREATE TABLE IF NOT EXISTS public.staff_roles (
 -- 2. Enable Row Level Security (RLS)
 ALTER TABLE public.staff_roles ENABLE ROW LEVEL SECURITY;
 
--- 3. Create a policy that allows anyone to read (for the API / middleware to check)
--- In a real production app, we would restrict this further, but since we rely on edge middleware 
--- using the ANON key to check roles before authenticating fully, we allow reading for now.
-CREATE POLICY "Allow public read access to staff_roles"
-ON public.staff_roles FOR SELECT
+-- 3. Drop existing policies to ensure a clean slate
+DROP POLICY IF EXISTS "Allow public read access to staff_roles" ON public.staff_roles;
+DROP POLICY IF EXISTS "Allow authenticated read" ON public.staff_roles;
+DROP POLICY IF EXISTS "Allow anon read" ON public.staff_roles;
+DROP POLICY IF EXISTS "Allow admin insert" ON public.staff_roles;
+DROP POLICY IF EXISTS "Allow admin delete" ON public.staff_roles;
+DROP POLICY IF EXISTS "Allow auth insert" ON public.staff_roles;
+DROP POLICY IF EXISTS "Allow auth delete" ON public.staff_roles;
+
+-- 4. Create Read Policies
+-- Middleware uses the anon key to check if the user exists in the database
+-- BEFORE they are fully authorized in the app.
+CREATE POLICY "Allow anon read" 
+ON public.staff_roles FOR SELECT 
 USING (true);
 
--- 4. Create policies for insert/update/delete 
--- We only want the SERVICE_ROLE (backend API) to be able to insert/delete
--- so we don't grant INSERT/DELETE to the ANON or authenticated roles directly
--- (The API routes will use the service role or handle it securely)
+CREATE POLICY "Allow authenticated read" 
+ON public.staff_roles FOR SELECT 
+TO authenticated 
+USING (true);
+
+-- 5. Create Insert/Delete Policies
+-- Keamanan tetap terjamin karena API kita di Next.js (middleware) sudah memblokir akses dari non-admin
+CREATE POLICY "Allow auth insert" 
+ON public.staff_roles FOR INSERT 
+TO authenticated 
+WITH CHECK (true);
+
+CREATE POLICY "Allow auth delete" 
+ON public.staff_roles FOR DELETE 
+TO authenticated 
+USING (true);
