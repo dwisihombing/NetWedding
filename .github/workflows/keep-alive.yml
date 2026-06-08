@@ -11,6 +11,7 @@ jobs:
     steps:
       - name: Ambil Data Ringan dari Supabase
         run: |
-          curl -i -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/" \
+          # Perbaikan: Memanggil tabel spesifik agar tercatat sebagai "aktivitas database".
+          curl -i -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/users?limit=1" \
           -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
           -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
